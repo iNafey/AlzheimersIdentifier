@@ -1,8 +1,7 @@
-# Computer Science Project
-This is my final year project on Alzheimer's identification using CNN.
+# Alzheimer's identification using CNN
 
 ## My Work
-I'm using a machine learning framework called 'keras' provided by tensorflow to develop my CNN model to detect AD. I also use transfer learning models for performance comparison, Grad-CAM heatmap and a web based UI for real users to interact with the custom model. 
+I'm using a machine learning framework called 'keras' provided by tensorflow to develop my CNN model to detect AD. I also use transfer learning models for performance comparison, Grad-CAM heatmap and a web based UI for real users to interact with the custom model.
 
 ## Git Contents
 Currently, all files are in the root directory.
