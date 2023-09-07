@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+    <head>
+        <title>Alzheimer's Disease Predictor</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+        <style>
+
+            body {
+                background-color:whitesmoke;
+                font-family: -apple-system, BlinkMacSystemFont,
+                “Segoe UI”, “Roboto”, “Oxygen”, “Ubuntu”, “Cantarell”,
+                “Fira Sans”, “Droid Sans”, “Helvetica Neue”,
+                sans-serif;
+            }
+
+            img {
+              /*
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+              */
+              max-width: 100%;
+              max-height: 100%;
+            }
+
+            #selected-image {
+                width: 200px;
+                height: 250px;
+                background: url('images/UploadImg.png') no-repeat;
+            }
+
+            .btn-center {
+                margin: auto;
+                width: 50%;
+                padding: 10px;
+                align-content: center;
+            }
+
+            .text-prediction {
+                display:none;
+            }
+
+            .header-prediction {
+                font-weight: bold;
+                color: cornflowerblue;
+            }
+
+            #header-block {
+                background-color:rgb(50, 50, 49)
+            }
+
+            </style>
+    </head>
+    <body>
+        <div class="container-fluid p-5 text-white text-center" id="header-block">
+            <h1>Alzheimer's disease (AD) classifier</h1>
+            <p>A python-based flask app powered with a custom CNN-model to predict AD from brain MRI images.</p>
+        </div>
+        <!--
+        Code for the sticky navbar was used from W3Schools guides: https://www.w3schools.com/bootstrap/bootstrap_navbar.asp
+        -->
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+            <div class="container-fluid">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="#section1">Predictor</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#section2">Architecture</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#section3">Performance</a>
+                </li>
+              </ul>
+            </div>
+        </nav>
+
+        <div class="container mt-5">
+            <div id="section1">
+                <p class="h1">Alzheimer's Disease Predictor</p>
+                <p>To use the predictor, upload a skull-stripped (for accurate predictions) brain MRI image (preferably small in size like 200x200) by clicking on 'Choose file'. Then, click on the 'Predict' button to view the result of the classification. Uploaded images can also be removed via the 'Cancel' button.</p>
+                <div class="row mt-5 text-center">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+                        <img id="selected-image" src="" alt="" class="img-select"/>
+                    </div>
+                    <div class="col-sm-4"></div>
+                </div>
+                <div class="row my-3 text-center">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-3 pl-3">
+                        <input id="image-select" type="file" class />
+                    </div>
+                    <div class="col-sm-4"></div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+                        <button id="predict-btn" class="btn btn-primary">Predict</button>
+                        <button id="clear-btn" class="btn btn-danger">Cancel</button>
+                    </div>
+                    <div class="col-sm-4"></div>
+                </div>
+                <div class="row my-4">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <div class="text-prediction">
+                            <p class="header-prediction h2">Classification Result</p>
+                            <div class="alert alert-info h4">
+                                <strong>Prediction:</strong> <span id="prediction-label"></span>
+                            </div>
+                            <br>
+                            <p class="header-prediction h2">Statistics (Probability Distribution):</p>
+                            <p style="font-weight:lighter; font-style:italic">*probabilities sum up to 1</p>
+                            <br>
+                            <p>Cognitively Neutral (CN): <span id="cn-prediction"></span></p>
+                            <p>Very Mildly Demented (VMD): <span id="vmd-prediction"></span></p>
+                            <p>Mildly Demented (MD): <span id="md-prediction"></span></p>
+                            <p>Alzheimer's Disease (AD): <span id="ad-prediction"></span> </p>
+
+                            <!-- canvas id="adChart" style="width:100%;max-width:600px"></canvas -->
+                        </div>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+                <div class="row my-5">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6 text-prediction">
+                        <canvas id="adChart" style="width:100%;max-width:600px"></canvas>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+            </div>
+
+            <div id="section2">
+                <p class="h1 mt-5 mb-3">Custom CNN Architecture</p>
+                <p>In order to devise a CNN model, multiple pre-trained models which had previously been used in medical imaging domain were tested.
+                    It was found that shallower networks with less layers (such as the VGG family) performed better than more deeper and denser architectures.
+                    Thus, the better performance of shallow networks inspired this CNN model.
+                    The hyperparameters were fine-tuned according to the most widely used values found in the state of the art architectures.
+                    Adam optimizer was used for gradient descent with a learning rate of 0.001.
+                    The loss function was set as categorical cross-entropy because the image labels were one-hot encoded e.g. [1, 0, 0, 0].
+                    In one-hot encoding the true label occupies a value of 1 while the rest are marked as 0, hence, there's an emphasis on the index of the label.
+                    My custom CNN architecture to be mainly used on brain MRI images for the purpose of AD classification can be visualized below.
+                </p>
+                <div class="row my-4">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <img src="images/custom_model.png">
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+            </div>
+
+            <div id="section3">
+
+                <p class="h1 mb-3">Performance Analysis</p>
+                <p>The custom built CNN model performs very well in training over the given dataset and also keeps up the performance on the test set.
+                    The test set (free from data augmentation) had 1279 brain MRI image files.
+                    The performance metrics of the model on the test set are summarised in the table below.
+                </p>
+
+                <p class="h3 mb-3">Model Performance Metrics</p>
+                <table class="table table-dark table-hover">
+                    <thead>
+                      <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Accuracy</td>
+                        <td>97.65%</td>
+                      </tr>
+                      <tr>
+                        <td>Loss</td>
+                        <td>0.010</td>
+                      </tr>
+                      <tr>
+                        <td>AUC</td>
+                        <td>0.9936</td>
+                      </tr>
+                      <tr>
+                        <td>Precision</td>
+                        <td>0.9773</td>
+                      </tr>
+                      <tr>
+                        <td>Recall</td>
+                        <td>0.9765</td>
+                      </tr>
+                      <tr>
+                        <td>F1-Score</td>
+                        <td>0.9769</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="h3 mb-3">Confusion Matrix</p>
+                  <div class="row my-4">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <img src="images/custom_cm.png">
+                    </div>
+                    <div class="col-sm-3"></div>
+                  </div>
+
+            </div>
+        </div>
+
+
+        <!--
+          The scripts used are adapted from deeplizard YouTube channel's playlist: 'Deploy Keras neural network to Flask web service'
+          The link for the entire playlist: https://www.youtube.com/watch?v=SI1hVGvbbZ4&list=PLZbbT5o_s2xr34kj-vyrIXzvUJsG3z5S_&ab_channel=deeplizard
+        -->
+        <script>
+            let base64image;
+            var reader
+            $('#image-select').change(function() {
+                reader = new FileReader();
+                reader.onload = function(e){
+                    let fileURL = reader.result;
+                    $('#selected-image').attr("src", fileURL);
+                    base64image = fileURL.replace("data:image/jpeg;base64,","");
+                    console.log(base64image)
+                }
+                reader.readAsDataURL($("#image-select")[0].files[0])
+                $(".text-prediction").css('display', 'none');
+
+            })
+
+            $("#predict-btn").click(function(event){
+                let message = {
+                    image: base64image
+                }
+                console.log(message)
+                $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(response){
+                    let neutral = parseFloat(response.prediction.neutral);
+                    let vmild = parseFloat(response.prediction.vmild);
+                    let mild = parseFloat(response.prediction.mild);
+                    let moderate = parseFloat(response.prediction.moderate);
+
+                    let prob_list = [neutral, vmild, mild, moderate]
+                    const index = prob_list.indexOf(Math.max(...prob_list))
+
+                    switch(index) {
+                        case 0:
+                            $("#prediction-label").text("Cognitively Neutral");
+                            break;
+                        case 1:
+                            $("#prediction-label").text("Very Mild Demented");
+                            break;
+                        case 2:
+                            $("#prediction-label").text("Mild Demented");
+                            break;
+                        case 3:
+                            $("#prediction-label").text("Alzheimer's Disease");
+                            break;
+
+                    }
+
+                    $("#cn-prediction").text(neutral+"%");
+                    $("#vmd-prediction").text(vmild+"%");
+                    $("#md-prediction").text(mild+"%");
+                    $("#ad-prediction").text(moderate+"%");
+
+                    //console.log("In %: ", neutral, vmild, mild, moderate)
+                    let xValues = ["CN", "VMD", "MD", "AD"];
+                    let yValues = [neutral, vmild, mild, moderate];
+                    let barColors = ["green", "yellow","orange","red"];
+
+                    new Chart("adChart", {
+                    type: "bar",
+                    data: {
+                        labels: xValues,
+                        datasets: [{
+                        backgroundColor: barColors,
+                        data: yValues
+                        }]
+                    },
+                    options: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: "Probability distribution of Alzheimer's disease prediction"
+                        },
+                        plugins: {
+                            chartAreaBorder: {
+                                borderColor: 'black',
+                                borderWidth: 2,
+                            }
+                        }
+                    }
+                    });
+
+                    $(".text-prediction").css('display', 'block');
+                    console.log(response);
+                })
+            })
+
+            $("#clear-btn").click(function(event){
+                $('#selected-image').attr("src", "");
+                base64image = "";
+                reader.abort()
+            })
+
+        </script>
+
+    </body>
+</html>

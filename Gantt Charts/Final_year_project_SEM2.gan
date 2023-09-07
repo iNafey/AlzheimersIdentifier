@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="Final year project SEM2" company="" webLink="http://" view-date="2022-10-17" view-index="0" gantt-divider-location="638" resource-divider-location="300" version="3.1.3103" locale="en_GB">
+    <description/>
+    <view zooming-state="default:2" id="gantt-chart">
+        <field id="tpd3" name="Name" width="434" order="0"/>
+        <field id="tpd4" name="Begin date" width="101" order="1"/>
+        <field id="tpd5" name="End date" width="97" order="2"/>
+        <option id="taskLabelUp" value=""/>
+        <option id="taskLabelDown" value="resources"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Name" width="209" order="0"/>
+        <field id="1" name="Default role" width="85" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="0" name="Create an AD classifier app" meeting="false" start="2023-01-09" duration="45" complete="0" expand="true">
+            <task id="2" name="Research existing solutions" color="#8cb6ce" meeting="false" start="2023-01-09" duration="5" complete="0" thirdDate="2022-10-17" thirdDate-constraint="0" expand="true"/>
+            <task id="3" name="Develop a protoype of all screens" color="#8cb6ce" meeting="false" start="2023-01-16" duration="10" complete="0" thirdDate="2022-10-17" thirdDate-constraint="0" expand="true"/>
+            <task id="4" name="Implement the logic of CNN in the app" color="#8cb6ce" meeting="false" start="2023-01-30" duration="12" complete="0" thirdDate="2022-10-17" thirdDate-constraint="0" expand="true"/>
+            <task id="5" name="Create new dataset and label functionality" color="#8cb6ce" meeting="false" start="2023-02-15" duration="8" complete="0" thirdDate="2022-10-17" thirdDate-constraint="0" expand="true"/>
+            <task id="8" name="Test all interactive elements and debug errors" color="#8cb6ce" meeting="false" start="2023-02-27" duration="10" complete="0" thirdDate="2022-10-17" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="6" name="Prepare deliverables for the interview" color="#8cb6ce" meeting="false" start="2023-02-06" duration="10" complete="0" thirdDate="2022-10-17" thirdDate-constraint="0" expand="true"/>
+        <task id="7" name="Complete dissertation" color="#8cb6ce" meeting="false" start="2023-02-27" duration="40" complete="0" thirdDate="2022-10-17" thirdDate-constraint="0" expand="true"/>
+        <task id="9" name="Create presentation for mini viva" color="#8cb6ce" meeting="false" start="2023-04-10" duration="20" complete="0" thirdDate="2022-10-17" thirdDate-constraint="0" expand="true"/>
+    </tasks>
+    <resources/>
+    <allocations/>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>
